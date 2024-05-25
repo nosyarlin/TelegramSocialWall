@@ -37,7 +37,7 @@ async def password(update: Update, context: ContextTypes.DEFAULT_TYPE):
     password_pattern = "/password ([A-Z]+)"
     text = update.message.text
     result = re.match(password_pattern, text)
-    if result is None or result.group(1) != environ["PASSWORD"]:
+    if result is None or result.group(1) != environ["VITE_TELEGRAM_BOT_PASSWORD"]:
         await update.message.reply_text("Sorry! You got the wrong password!")
     else:
         auth_users.add(update.message.chat.username)
