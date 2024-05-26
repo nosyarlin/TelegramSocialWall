@@ -9,6 +9,7 @@ from telegram.ext import (
     CommandHandler,
     MessageHandler,
     filters,
+    ExtBot
 )
 
 from server import Server
@@ -49,40 +50,62 @@ class TelegramSocialBot:
                 "You have been authenticated! All future messages and photos will be sent to the wall."
             )
 
+    async def get_profile_photo_src(self, user_id: int, bot: ExtBot) -> str | None:
+        user_profile_photos = await bot.get_user_profile_photos(user_id)
+        if user_profile_photos.total_count <= 0:
+            return None
+
+        profile_photo = user_profile_photos.photos[0][
+            0
+        ]  # Get the lowest resolution photo
+        profile_photo_file = await profile_photo.get_file()
+        return profile_photo_file.file_path
+
     async def handle_message(
         self, update: Update, context: ContextTypes.DEFAULT_TYPE
     ) -> None:
         """Sends a message to the telegram wall"""
 
         message = update.message
+        if message is None:
+            return
+
         user = message.from_user
+        if user is None:
+            return;
+
         username = user.username
-        if username in self.__auth_users:
-            print(message)
-            displayName = f"{user.first_name} {user.last_name}"
 
-            user_profile_photos = await context.bot.get_user_profile_photos(user.id)
+        if username not in self.__auth_users:
+            return await update.message.reply_text(
+                "Sorry! Use /password to authenticate before sending your message."
+            )
 
-            if user_profile_photos.total_count > 0:
-                photo = user_profile_photos.photos[0][
-                    0
-                ]  # Get the lowest resolution photo
-                file_id = photo.file_id
-                file = await context.bot.get_file(file_id)
+        print(message)
+        displayName = f"{user.first_name} {user.last_name}"
+
+        try:
+            # Get profile photo
+            profile_photo_file_path = await self.get_profile_photo_src(user.id, context.bot)
+
+            # Get photo in message if any
+            content_photo_file_path = None
+            if len(message.photo) > 0:
+                content_photo = message.photo[-1] # Get highest resolution photo
+                content_photo_file = await content_photo.get_file()
+                content_photo_file_path = content_photo_file.file_path
 
             await self.__server.send(
                 {
                     "id": message.id,
-                    "text": message.text,
+                    "text": message.text or message.caption,
+                    "photoSrc": content_photo_file_path,
                     "name": displayName,
-                    "avatarSrc": file.file_path,
+                    "avatarSrc": profile_photo_file_path,
                 }
             )
-
-        else:
-            await update.message.reply_text(
-                "Sorry! Use /password to authenticate before sending your message."
-            )
+        except Exception as e:
+            print(e)
 
     async def post_init(self, _):
         self.__server_task = asyncio.create_task(self.__server.run())

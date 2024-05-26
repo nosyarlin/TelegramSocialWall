@@ -1,24 +1,24 @@
-import { Collapse, List } from "@mui/material";
-import { Message, MessageListItem } from "./MessageListItem";
+import { Collapse, List, Stack } from "@mui/material";
+import { Message, MessageCard } from "./MessageCard";
 import { TransitionGroup } from "react-transition-group";
 
 type MessageListProps = {
   messages: Message[];
-} & React.ComponentProps<typeof List>;
+} & React.ComponentProps<typeof Stack>;
 
 export function MessageList({
   messages,
   ...props
 }: MessageListProps): JSX.Element {
   return (
-    <List {...props}>
+    <Stack {...props} direction="column">
       <TransitionGroup>
         {messages.map((message) => (
           <Collapse key={message.id}>
-            <MessageListItem message={message} />
+            <MessageCard message={message} />
           </Collapse>
         ))}
       </TransitionGroup>
-    </List>
+    </Stack>
   );
 }
