@@ -72,9 +72,10 @@ class TelegramSocialBot:
 
             await self.__server.send(
                 {
-                    "message": message.text,
+                    "id": message.id,
+                    "text": message.text,
                     "name": displayName,
-                    "profile_picture_url": file.file_path,
+                    "avatarSrc": file.file_path,
                 }
             )
 
@@ -83,10 +84,10 @@ class TelegramSocialBot:
                 "Sorry! Use /password to authenticate before sending your message."
             )
 
-    async def post_init(self, application):
+    async def post_init(self, _):
         self.__server_task = asyncio.create_task(self.__server.run())
 
-    async def post_shutdown(self, application):
+    async def post_shutdown(self, _):
         self.__server_task.cancel()
         await self.__server_task
 
