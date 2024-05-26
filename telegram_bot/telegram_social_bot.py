@@ -1,4 +1,5 @@
 from ast import If
+import asyncio
 import re
 from os import environ
 from telegram import Update
@@ -69,17 +70,36 @@ class TelegramSocialBot:
                 file_id = photo.file_id
                 file = await context.bot.get_file(file_id)
 
-            await self.__server.send({"message": message.text, "name": displayName, "profile_picture_url": file.file_path})
+            await self.__server.send(
+                {
+                    "message": message.text,
+                    "name": displayName,
+                    "profile_picture_url": file.file_path,
+                }
+            )
 
         else:
             await update.message.reply_text(
                 "Sorry! Use /password to authenticate before sending your message."
             )
 
+    async def post_init(self, application):
+        self.__server_task = asyncio.create_task(self.__server.run())
+
+    async def post_shutdown(self, application):
+        self.__server_task.cancel()
+        await self.__server_task
+
     def run(self) -> None:
         token = environ["TELEGRAM_BOT_TOKEN"]
 
-        application = ApplicationBuilder().token(token).build()
+        application = (
+            ApplicationBuilder()
+            .token(token)
+            .post_init(self.post_init)
+            .post_shutdown(self.post_shutdown)
+            .build()
+        )
 
         start_handler = CommandHandler("start", self.start)
         help_handler = CommandHandler("help", self.start)
