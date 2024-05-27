@@ -38,16 +38,21 @@ export function MessageCard({ message }: MessageCardProps): JSX.Element {
     <Card
       sx={{
         minWidth: "100%",
-        mb: hide ? 0 : 2,
+        mb: hide ? 0 : 3,
         boxShadow: "0px 5px 10px 1px rgba(0,0,0,0.05);",
         height: hide ? 0 : undefined,
       }}
     >
       <CardHeader
+        sx={{
+          padding: "24px",
+        }}
         avatar={
           <Avatar
             src={message.avatarSrc}
             sx={{
+              width: "60px",
+              height: "60px",
               bgcolor: colors[avatarColor][50],
               color: colors[avatarColor][500],
               ".MuiSvgIcon-fontSizeMedium": {
@@ -56,7 +61,7 @@ export function MessageCard({ message }: MessageCardProps): JSX.Element {
             }}
           />
         }
-        title={<Typography variant="h6">{message.name}</Typography>}
+        title={<Typography variant="h4">{message.name}</Typography>}
         action={
           <IconButton
             onClick={() => setHide(true)}
@@ -73,8 +78,11 @@ export function MessageCard({ message }: MessageCardProps): JSX.Element {
           image={message.photoSrc}
         />
       )}
-      <CardContent sx={{ pt: 0 }}>
-        <Typography variant="body1" sx={{ color: colors.grey[800] }}>
+      <CardContent sx={{ padding: "24px", pt: 0 }}>
+        <Typography
+          variant="body1"
+          sx={{ color: colors.grey[800], fontSize: "1.5rem" }}
+        >
           {message.text}
         </Typography>
       </CardContent>

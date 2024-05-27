@@ -50,7 +50,7 @@ function App() {
             {`Password: ${import.meta.env.VITE_TELEGRAM_BOT_PASSWORD}`}
           </Typography>
         </Stack>
-        <Stack direction="row" gap={2} marginX={8}>
+        <Stack direction="row" gap={3} marginX={8}>
           <MessageList sx={{ width: "33%" }} messages={column1} />
           <MessageList sx={{ width: "33%" }} messages={column2} />
           <MessageList sx={{ width: "33%" }} messages={column3} />
