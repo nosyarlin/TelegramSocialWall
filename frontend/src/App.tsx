@@ -3,7 +3,7 @@ import { MessageList } from "./components/MessageList/MessageList";
 import { useState } from "react";
 import useWebSocket from "react-use-websocket";
 import { Box, CssBaseline, Stack, Typography, colors } from "@mui/material";
-import { createFakeMessages } from "./faker";
+import { createFakeMessages } from "./components/MessageList/faker";
 
 function App() {
   const port = import.meta.env.VITE_WEBSOCKET_PORT;

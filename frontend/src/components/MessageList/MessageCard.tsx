@@ -4,10 +4,13 @@ import {
   CardContent,
   CardHeader,
   CardMedia,
+  IconButton,
   Typography,
   colors,
 } from "@mui/material";
 import _ from "lodash";
+import { useState } from "react";
+import ClearIcon from "@mui/icons-material/Clear";
 
 export type Message = {
   id: string;
@@ -22,6 +25,7 @@ type MessageCardProps = {
 };
 
 export function MessageCard({ message }: MessageCardProps): JSX.Element {
+  const [hide, setHide] = useState(false);
   const avatarColor: keyof typeof colors = _.sample([
     "deepPurple",
     "deepOrange",
@@ -34,8 +38,9 @@ export function MessageCard({ message }: MessageCardProps): JSX.Element {
     <Card
       sx={{
         minWidth: "100%",
-        mb: 2,
+        mb: hide ? 0 : 2,
         boxShadow: "0px 5px 10px 1px rgba(0,0,0,0.05);",
+        height: hide ? 0 : undefined,
       }}
     >
       <CardHeader
@@ -52,11 +57,19 @@ export function MessageCard({ message }: MessageCardProps): JSX.Element {
           />
         }
         title={<Typography variant="h6">{message.name}</Typography>}
+        action={
+          <IconButton
+            onClick={() => setHide(true)}
+            sx={{ color: colors.grey[500] }}
+          >
+            <ClearIcon />
+          </IconButton>
+        }
       />
       {message.photoSrc && (
         <CardMedia
           component="img"
-          sx={{ maxHeight: "280px", mb: "8px" }}
+          sx={{ maxHeight: "380px", mb: "8px" }}
           image={message.photoSrc}
         />
       )}

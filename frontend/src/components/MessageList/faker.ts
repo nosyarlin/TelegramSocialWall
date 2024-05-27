@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { Message } from "./components/MessageList/MessageCard";
+import { Message } from "./MessageCard";
 import _ from "lodash";
 
 function createFakeMessage(): Message {

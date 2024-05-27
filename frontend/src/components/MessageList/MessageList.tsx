@@ -1,4 +1,4 @@
-import { Collapse, List, Stack } from "@mui/material";
+import { Collapse, Stack } from "@mui/material";
 import { Message, MessageCard } from "./MessageCard";
 import { TransitionGroup } from "react-transition-group";
 
