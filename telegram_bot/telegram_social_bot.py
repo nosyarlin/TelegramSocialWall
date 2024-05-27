@@ -26,13 +26,13 @@ class TelegramSocialBot:
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
             text="""
-    I can post your messages to the telegram wall!
-    You can control me by sending these commands:
+I can post your messages to the telegram wall!
+You can control me by sending these commands:
 
-    /help - see available commands
-    /password - authenticate yourself using the provided password
+/help - see available commands
+/password - authenticate yourself using the provided password
 
-    Once you have been authenticated, I will post your messages to the wall
+Once you have been authenticated, I will post your messages to the wall
             """,
         )
 

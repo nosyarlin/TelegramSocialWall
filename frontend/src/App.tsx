@@ -2,7 +2,7 @@ import { Message } from "./components/MessageList/MessageCard";
 import { MessageList } from "./components/MessageList/MessageList";
 import { useState } from "react";
 import useWebSocket from "react-use-websocket";
-import { CssBaseline, Paper, Stack, Typography, colors } from "@mui/material";
+import { Box, CssBaseline, Stack, Typography, colors } from "@mui/material";
 import { createFakeMessages } from "./faker";
 
 function App() {
@@ -37,7 +37,7 @@ function App() {
   return (
     <>
       <CssBaseline />
-      <Paper sx={{ bgcolor: colors.blueGrey[50], height: "100vh" }}>
+      <Box sx={{ bgcolor: colors.blueGrey[50], height: "100%" }}>
         <Stack
           width={"100%"}
           direction="column"
@@ -55,7 +55,7 @@ function App() {
           <MessageList sx={{ width: "33%" }} messages={column2} />
           <MessageList sx={{ width: "33%" }} messages={column3} />
         </Stack>
-      </Paper>
+      </Box>
     </>
   );
 }
