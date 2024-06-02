@@ -21,13 +21,16 @@ function App() {
   const [column3, setColumn3] = useState<Message[]>(
     useFakerData ? createFakeMessages(10) : []
   );
-  const setColumnFuncs = [setColumn1, setColumn2, setColumn3];
+  const [column4, setColumn4] = useState<Message[]>(
+    useFakerData ? createFakeMessages(10) : []
+  );
+  const setColumnFuncs = [setColumn1, setColumn2, setColumn3,setColumn4];
 
   useWebSocket(url, {
     onOpen: () => console.log("opened"),
     onMessage: (event: WebSocketEventMap["message"]) => {
       const message = JSON.parse(event.data);
-      const setColumnFunc = setColumnFuncs[totalCount % 3];
+      const setColumnFunc = setColumnFuncs[totalCount % 4];
       setColumnFunc((prevColumn) => [message, ...prevColumn]);
       setTotalCount((prev) => prev + 1);
     },
@@ -37,7 +40,7 @@ function App() {
   return (
     <>
       <CssBaseline />
-      <Box sx={{ bgcolor: colors.blueGrey[50], height: "100%" }}>
+      <Box sx={{ bgcolor: colors.blueGrey[100], height: "100%" }}>
         <Stack
           width={"100%"}
           direction="column"
@@ -45,15 +48,17 @@ function App() {
           paddingTop="48px"
           paddingBottom="36px"
         >
-          <Typography variant="h1">Telegram: joejyn&jinghui</Typography>
-          <Typography variant="h1" color={colors.grey[500]}>
-            {`Password: ${import.meta.env.VITE_TELEGRAM_BOT_PASSWORD}`}
+          <Typography variant="h2">Send in your messages/pictures to the telegram bot:</Typography>
+          <Typography variant="h2">joejyn&jinghui</Typography>
+          <Typography variant="h2" color={colors.grey[600]}>
+            {`To start, type in: /password ${import.meta.env.VITE_TELEGRAM_BOT_PASSWORD}`}
           </Typography>
         </Stack>
         <Stack direction="row" gap={3} marginX={8}>
-          <MessageList sx={{ width: "33%" }} messages={column1} />
-          <MessageList sx={{ width: "33%" }} messages={column2} />
-          <MessageList sx={{ width: "33%" }} messages={column3} />
+          <MessageList sx={{ width: "25%" }} messages={column1} />
+          <MessageList sx={{ width: "25%" }} messages={column2} />
+          <MessageList sx={{ width: "25%" }} messages={column3} />
+          <MessageList sx={{ width: "25%" }} messages={column4} />
         </Stack>
       </Box>
     </>
