@@ -2,7 +2,7 @@ import { Message } from "./components/MessageList/MessageCard";
 import { MessageList } from "./components/MessageList/MessageList";
 import { useState } from "react";
 import useWebSocket from "react-use-websocket";
-import { Box, CssBaseline, Stack, Typography, colors } from "@mui/material";
+import { Box, CssBaseline, Stack, Typography } from "@mui/material";
 import { createFakeMessages } from "./components/MessageList/faker";
 import logo from '../imgs/us_sticker.png';
 
