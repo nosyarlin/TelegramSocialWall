@@ -4,6 +4,7 @@ import { useState } from "react";
 import useWebSocket from "react-use-websocket";
 import { Box, CssBaseline, Stack, Typography, colors } from "@mui/material";
 import { createFakeMessages } from "./components/MessageList/faker";
+import logo from '../imgs/us_sticker.png';
 
 function App() {
   const port = import.meta.env.VITE_WEBSOCKET_PORT;
@@ -26,6 +27,8 @@ function App() {
   );
   const setColumnFuncs = [setColumn1, setColumn2, setColumn3,setColumn4];
 
+  console.log(logo);
+
   useWebSocket(url, {
     onOpen: () => console.log("opened"),
     onMessage: (event: WebSocketEventMap["message"]) => {
@@ -40,21 +43,29 @@ function App() {
   return (
     <>
       <CssBaseline />
-      <Box sx={{ bgcolor: colors.blueGrey[100], height: "100%" }}>
+      <Box sx={{ bgcolor: '#182734', height: "100%" }}>
         <Stack
           width={"100%"}
           direction="column"
-          alignItems="center"
-          paddingTop="48px"
-          paddingBottom="36px"
+          alignItems="left"
+          paddingTop="30px"
+          paddingBottom="48px"
+          paddingLeft="58px"
         >
-          <Typography variant="h2">Send in your messages/pictures to the telegram bot:</Typography>
-          <Typography variant="h2">joejyn&jinghui</Typography>
-          <Typography variant="h2" color={colors.grey[600]}>
-            {`To start, type in: /password ${import.meta.env.VITE_TELEGRAM_BOT_PASSWORD}`}
+          <div style={{display: 'flex', alignItems: 'center'}}>
+            <Typography variant = 'h1' fontSize = '92px' color= '#FFFFFF' fontFamily={'Elephant'} marginRight='30px'>
+              Joejyn & Jinghui's Digital Wish Board
+            </Typography>
+            <img src={logo} alt = 'Logo' width = '188px' height = '92px'/>
+          </div>
+          <Typography variant = 'h2' fontSize = '66px' color= '#B1B1B1' fontFamily={'Georgia'}>
+            Send in your well wishes or images to the Telegram bot: <b style={{color: '#CDCDCD'}}> joejyn&jinghui </b>
+          </Typography> 
+          <Typography variant = 'h2' fontSize = '66px' color= '#B1B1B1' fontFamily={'Georgia'}>
+            To start posting, type: <b style={{color: '#CDCDCD'}}>/password {import.meta.env.VITE_TELEGRAM_BOT_PASSWORD}</b>
           </Typography>
         </Stack>
-        <Stack direction="row" gap={3} marginX={8}>
+        <Stack direction="row" gap={4} marginX={8}>
           <MessageList sx={{ width: "25%" }} messages={column1} />
           <MessageList sx={{ width: "25%" }} messages={column2} />
           <MessageList sx={{ width: "25%" }} messages={column3} />

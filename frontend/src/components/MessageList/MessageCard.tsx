@@ -33,6 +33,7 @@ export function MessageCard({ message }: MessageCardProps): JSX.Element {
     "cyan",
     "pink",
   ]);
+  const firstName = message.name.split(' ')[0];
 
   return (
     <Card
@@ -41,6 +42,7 @@ export function MessageCard({ message }: MessageCardProps): JSX.Element {
         mb: hide ? 0 : 3,
         boxShadow: "0px 5px 10px 1px rgba(0,0,0,0.05);",
         height: hide ? 0 : undefined,
+        borderRadius: "16px",
       }}
     >
       <CardHeader
@@ -61,7 +63,7 @@ export function MessageCard({ message }: MessageCardProps): JSX.Element {
             }}
           />
         }
-        title={<Typography variant="h5">{message.name}</Typography>}
+        title={<Typography variant="h5">{firstName}</Typography>}
         action={
           <IconButton
             onClick={() => setHide(true)}
