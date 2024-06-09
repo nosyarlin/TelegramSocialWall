@@ -39,7 +39,7 @@ Once you have been authenticated, I will post your messages to the wall
     async def password(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """Authenticates a user"""
 
-        password_pattern = "/password ([A-Z]+)"
+        password_pattern = "/password ([\\w&]+)"
         text = update.message.text
         result = re.match(password_pattern, text)
         if result is None or result.group(1) != environ["VITE_TELEGRAM_BOT_PASSWORD"]:
