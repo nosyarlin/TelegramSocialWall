@@ -26,13 +26,12 @@ class TelegramSocialBot:
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
             text="""
-I can post your messages to the telegram wall!
+I can post your messages to the Digital Wish Board!
 You can control me by sending these commands:
 
-/help - see available commands
-/password - authenticate yourself using the provided password
+/password - authenticate yourself using the provided password on the screen
 
-Once you have been authenticated, I will post your messages to the wall
+Once you have been authenticated, I will post your messages to the wall :)
             """,
         )
 
@@ -78,7 +77,7 @@ Once you have been authenticated, I will post your messages to the wall
 
         if username not in self.__auth_users:
             return await update.message.reply_text(
-                "Sorry! Use /password to authenticate before sending your message."
+                "Sorry! Use /password on the screen to authenticate before sending your message."
             )
 
         print(message)
