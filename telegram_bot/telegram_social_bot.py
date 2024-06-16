@@ -1,18 +1,30 @@
 from ast import If
 import asyncio
+from cgitb import text
+import json
+from pathlib import Path, PurePath
 import re
 from os import environ
-from telegram import Update
+from typing import Optional, TypedDict
+from telegram import File, Update
 from telegram.ext import (
     ApplicationBuilder,
     ContextTypes,
     CommandHandler,
     MessageHandler,
     filters,
-    ExtBot
+    ExtBot,
 )
 
 from server import Server
+
+
+class WallMessageContent(TypedDict):
+    id: str
+    text: str
+    photoSrc: str
+    name: str
+    avatarSrc: str
 
 
 class TelegramSocialBot:
@@ -60,6 +72,16 @@ Once you have been authenticated, I will post your messages to the wall :)
         profile_photo_file = await profile_photo.get_file()
         return profile_photo_file.file_path
 
+    async def store_message(
+        self, content: WallMessageContent, file: Optional[File]
+    ) -> None:
+        Path("./messages").mkdir(parents=True, exist_ok=True)
+        with open(PurePath(".", "messages", f'{content["id"]}.json'), "w") as f:
+            json.dump(content, f)
+        if file:
+            file_name = file.file_path.split("/")[-1]
+            await file.download_to_drive(PurePath(".", "messages", file_name))
+
     async def handle_message(
         self, update: Update, context: ContextTypes.DEFAULT_TYPE
     ) -> None:
@@ -71,7 +93,7 @@ Once you have been authenticated, I will post your messages to the wall :)
 
         user = message.from_user
         if user is None:
-            return;
+            return
 
         username = user.username
 
@@ -85,24 +107,27 @@ Once you have been authenticated, I will post your messages to the wall :)
 
         try:
             # Get profile photo
-            profile_photo_file_path = await self.get_profile_photo_src(user.id, context.bot)
+            profile_photo_file_path = await self.get_profile_photo_src(
+                user.id, context.bot
+            )
 
             # Get photo in message if any
-            content_photo_file_path = None
+            content_photo_file = None
             if len(message.photo) > 0:
-                content_photo = message.photo[-1] # Get highest resolution photo
+                content_photo = message.photo[-1]  # Get highest resolution photo
                 content_photo_file = await content_photo.get_file()
-                content_photo_file_path = content_photo_file.file_path
 
-            await self.__server.send(
-                {
-                    "id": message.id,
-                    "text": message.text or message.caption,
-                    "photoSrc": content_photo_file_path,
-                    "name": displayName,
-                    "avatarSrc": profile_photo_file_path,
-                }
-            )
+            telegram_wall_content: WallMessageContent = {
+                "id": message.id,
+                "text": message.text or message.caption,
+                "photoSrc": (
+                    content_photo_file.file_path if content_photo_file else None
+                ),
+                "name": displayName,
+                "avatarSrc": profile_photo_file_path,
+            }
+            await self.__server.send(telegram_wall_content)
+            await self.store_message(telegram_wall_content, content_photo_file)
         except Exception as e:
             print(e)
 
