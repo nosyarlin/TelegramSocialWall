@@ -4,7 +4,7 @@ import { useState } from "react";
 import useWebSocket from "react-use-websocket";
 import { Box, CssBaseline, Stack, Typography } from "@mui/material";
 import { createFakeMessages } from "./components/MessageList/faker";
-import logo from '../imgs/us_sticker.png';
+import logo from "../imgs/us_sticker.png";
 
 function App() {
   const port = import.meta.env.VITE_WEBSOCKET_PORT;
@@ -12,7 +12,6 @@ function App() {
   const useFakerData = import.meta.env.VITE_USE_FAKER;
 
   const [totalCount, setTotalCount] = useState(0);
-  console.log(createFakeMessages(1));
   const [column1, setColumn1] = useState<Message[]>(
     useFakerData ? createFakeMessages(10) : []
   );
@@ -25,9 +24,7 @@ function App() {
   const [column4, setColumn4] = useState<Message[]>(
     useFakerData ? createFakeMessages(10) : []
   );
-  const setColumnFuncs = [setColumn1, setColumn2, setColumn3,setColumn4];
-
-  console.log(logo);
+  const setColumnFuncs = [setColumn1, setColumn2, setColumn3, setColumn4];
 
   useWebSocket(url, {
     onOpen: () => console.log("opened"),
@@ -43,7 +40,7 @@ function App() {
   return (
     <>
       <CssBaseline />
-      <Box sx={{ bgcolor: '#182734', height: "100%" }}>
+      <Box sx={{ bgcolor: "#182734", height: "100%" }}>
         <Stack
           width={"100%"}
           direction="column"
@@ -52,17 +49,37 @@ function App() {
           paddingBottom="48px"
           paddingLeft="58px"
         >
-          <div style={{display: 'flex', alignItems: 'center'}}>
-            <Typography variant = 'h1' fontSize = '92px' color= '#FFFFFF' fontFamily={'Elephant'} marginRight='30px'>
+          <Stack direction="row" alignItems="center">
+            <Typography
+              variant="h1"
+              fontSize="92px"
+              color="#FFFFFF"
+              fontFamily={"Elephant"}
+              marginRight="30px"
+            >
               Joejyn & Jinghui's Digital Wish Board
             </Typography>
-            <img src={logo} alt = 'Logo' width = '188px' height = '92px'/>
-          </div>
-          <Typography variant = 'h2' fontSize = '66px' color= '#B1B1B1' fontFamily={'Georgia'}>
-            Send in your well wishes or images to the Telegram bot: <b style={{color: '#CDCDCD'}}> joejyn&jinghui </b>
-          </Typography> 
-          <Typography variant = 'h2' fontSize = '66px' color= '#B1B1B1' fontFamily={'Georgia'}>
-            To start posting, type: <b style={{color: '#CDCDCD'}}>/password {import.meta.env.VITE_TELEGRAM_BOT_PASSWORD}</b>
+            <img src={logo} alt="Logo" width="188px" height="92px" />
+          </Stack>
+          <Typography
+            variant="h2"
+            fontSize="66px"
+            color="#B1B1B1"
+            fontFamily={"Georgia"}
+          >
+            Send in your well wishes or images to the Telegram bot:{" "}
+            <b style={{ color: "#CDCDCD" }}> joejyn&jinghui </b>
+          </Typography>
+          <Typography
+            variant="h2"
+            fontSize="66px"
+            color="#B1B1B1"
+            fontFamily={"Georgia"}
+          >
+            To start posting, type:{" "}
+            <b style={{ color: "#CDCDCD" }}>
+              /password {import.meta.env.VITE_TELEGRAM_BOT_PASSWORD}
+            </b>
           </Typography>
         </Stack>
         <Stack direction="row" gap={4} marginX={8}>
