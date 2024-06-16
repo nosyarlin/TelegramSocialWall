@@ -1,12 +1,13 @@
-from ast import If
 import asyncio
-from cgitb import text
 import json
+from multiprocessing import Pool
+import urllib.request
 from pathlib import Path, PurePath
 import re
 from os import environ
+import traceback
 from typing import Optional, TypedDict
-from telegram import File, Update
+from telegram import Update
 from telegram.ext import (
     ApplicationBuilder,
     ContextTypes,
@@ -27,10 +28,21 @@ class WallMessageContent(TypedDict):
     avatarSrc: str
 
 
+def store_message(content: WallMessageContent, file_url: Optional[str]) -> None:
+    Path("./messages").mkdir(parents=True, exist_ok=True)
+    with open(PurePath(".", "messages", f'{content["id"]}.json'), "w") as f:
+        json.dump(content, f)
+
+    if file_url:
+        file_name = file_url.split("/")[-1]
+        urllib.request.urlretrieve(file_url, PurePath(".", "messages", file_name))
+
+
 class TelegramSocialBot:
     def __init__(self, server: Server) -> None:
         self.__auth_users = set()
         self.__server = server
+        self.__download_processes = Pool(8)
 
     async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """Explains what commands are available"""
@@ -71,16 +83,6 @@ Once you have been authenticated, I will post your messages to the wall :)
         ]  # Get the lowest resolution photo
         profile_photo_file = await profile_photo.get_file()
         return profile_photo_file.file_path
-
-    async def store_message(
-        self, content: WallMessageContent, file: Optional[File]
-    ) -> None:
-        Path("./messages").mkdir(parents=True, exist_ok=True)
-        with open(PurePath(".", "messages", f'{content["id"]}.json'), "w") as f:
-            json.dump(content, f)
-        if file:
-            file_name = file.file_path.split("/")[-1]
-            await file.download_to_drive(PurePath(".", "messages", file_name))
 
     async def handle_message(
         self, update: Update, context: ContextTypes.DEFAULT_TYPE
@@ -127,14 +129,23 @@ Once you have been authenticated, I will post your messages to the wall :)
                 "avatarSrc": profile_photo_file_path,
             }
             await self.__server.send(telegram_wall_content)
-            await self.store_message(telegram_wall_content, content_photo_file)
+            self.__download_processes.apply_async(
+                store_message,
+                args=(
+                    telegram_wall_content,
+                    content_photo_file.file_path if content_photo_file else None,
+                ),
+            )
         except Exception as e:
             print(e)
+            print(traceback.format_exc())
 
     async def post_init(self, _):
         self.__server_task = asyncio.create_task(self.__server.run())
 
     async def post_shutdown(self, _):
+        self.__download_processes.close()
+        self.__download_processes.join()
         self.__server_task.cancel()
         await self.__server_task
 
@@ -149,11 +160,11 @@ Once you have been authenticated, I will post your messages to the wall :)
             .build()
         )
 
-        start_handler = CommandHandler("start", self.start)
-        help_handler = CommandHandler("help", self.start)
-        password_handler = CommandHandler("password", self.password)
+        start_handler = CommandHandler("start", self.start, block=False)
+        help_handler = CommandHandler("help", self.start, block=False)
+        password_handler = CommandHandler("password", self.password, block=False)
         message_handler = MessageHandler(
-            filters.PHOTO | filters.TEXT, self.handle_message
+            filters.PHOTO | filters.TEXT, self.handle_message, block=False
         )
 
         application.add_handler(start_handler)

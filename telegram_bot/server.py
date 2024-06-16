@@ -22,7 +22,7 @@ class Server:
         websockets.broadcast(self.__connections, json.dumps(message))
 
     async def run(self) -> None:
-        port = environ['VITE_WEBSOCKET_PORT']
+        port = environ["VITE_WEBSOCKET_PORT"]
         print("Opening web socket")
         try:
             async with websockets.serve(self.register, "localhost", port):
