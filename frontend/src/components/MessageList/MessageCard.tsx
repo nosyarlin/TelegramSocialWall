@@ -33,7 +33,7 @@ export function MessageCard({ message }: MessageCardProps): JSX.Element {
     "cyan",
     "pink",
   ]);
-  const firstName = message.name.split(' ')[0];
+  const firstName = message.name.split(" ")[0];
 
   return (
     <Card
@@ -76,7 +76,7 @@ export function MessageCard({ message }: MessageCardProps): JSX.Element {
       {message.photoSrc && (
         <CardMedia
           component="img"
-          sx={{ maxHeight: "650px", mb: "8px" }}
+          sx={{ maxHeight: "2000px", mb: "8px" }}
           image={message.photoSrc}
         />
       )}

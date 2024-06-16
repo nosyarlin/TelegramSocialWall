@@ -1,17 +1,25 @@
 import { Message } from "./components/MessageList/MessageCard";
 import { MessageList } from "./components/MessageList/MessageList";
-import { useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import useWebSocket from "react-use-websocket";
 import { Box, CssBaseline, Stack, Typography } from "@mui/material";
 import { createFakeMessages } from "./components/MessageList/faker";
 import logo from "../imgs/us_sticker.png";
+import { v4 as uuidv4 } from "uuid";
+
+import Papa from "papaparse";
+import { random } from "lodash";
+
+type PreloadedMessage = {
+  "first name": string;
+  "well wishes": string;
+};
 
 function App() {
   const port = import.meta.env.VITE_WEBSOCKET_PORT;
   const url = `ws://localhost:${port}/`;
   const useFakerData = import.meta.env.VITE_USE_FAKER;
 
-  const [totalCount, setTotalCount] = useState(0);
   const [column1, setColumn1] = useState<Message[]>(
     useFakerData ? createFakeMessages(10) : []
   );
@@ -24,18 +32,51 @@ function App() {
   const [column4, setColumn4] = useState<Message[]>(
     useFakerData ? createFakeMessages(10) : []
   );
-  const setColumnFuncs = [setColumn1, setColumn2, setColumn3, setColumn4];
+  const setColumnFuncs = useMemo(
+    () => [setColumn1, setColumn2, setColumn3, setColumn4],
+    []
+  );
+
+  const addMessage = useCallback(
+    (message: Message) => {
+      const setColumnFunc = setColumnFuncs[random(0, 3)];
+      setColumnFunc((prevColumn) => [message, ...prevColumn]);
+    },
+    [setColumnFuncs]
+  );
 
   useWebSocket(url, {
     onOpen: () => console.log("opened"),
     onMessage: (event: WebSocketEventMap["message"]) => {
-      const message = JSON.parse(event.data);
-      const setColumnFunc = setColumnFuncs[totalCount % 4];
-      setColumnFunc((prevColumn) => [message, ...prevColumn]);
-      setTotalCount((prev) => prev + 1);
+      const message = JSON.parse(event.data) as Message;
+      addMessage(message);
     },
     shouldReconnect: () => true,
   });
+
+  const preloadWellWishes = useCallback(() => {
+    fetch("./WellWishes_Chosen.csv")
+      .then((data) => data.text())
+      .then((csvText): void => {
+        const preloadedWishes = Papa.parse<PreloadedMessage>(csvText, {
+          delimiter: ",",
+          header: true,
+        });
+        preloadedWishes.data.forEach((wish) => {
+          addMessage({
+            id: uuidv4(),
+            name: wish["first name"],
+            text: wish["well wishes"],
+          });
+        });
+      });
+  }, [addMessage]);
+
+  useEffect(() => {
+    preloadWellWishes();
+    // only run on load
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
