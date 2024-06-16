@@ -63,7 +63,7 @@ export function MessageCard({ message }: MessageCardProps): JSX.Element {
             }}
           />
         }
-        title={<Typography variant="h5">{firstName}</Typography>}
+        title={<Typography variant="h4">{firstName}</Typography>}
         action={
           <IconButton
             onClick={() => setHide(true)}
@@ -80,10 +80,10 @@ export function MessageCard({ message }: MessageCardProps): JSX.Element {
           image={message.photoSrc}
         />
       )}
-      <CardContent sx={{ padding: "24px", pt: 0 }}>
+      <CardContent sx={{ padding: "26px", pt: 0 }}>
         <Typography
           variant="body1"
-          sx={{ color: colors.grey[800], fontSize: "2rem" }}
+          sx={{ color: colors.grey[800], fontSize: "2.5rem" }}
         >
           {message.text}
         </Typography>
