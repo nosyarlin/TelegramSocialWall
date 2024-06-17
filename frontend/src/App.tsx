@@ -8,7 +8,7 @@ import logo from "../imgs/us_sticker.png";
 import { v4 as uuidv4 } from "uuid";
 
 import Papa from "papaparse";
-import { random } from "lodash";
+import random from "lodash.random";
 
 type PreloadedMessage = {
   "first name": string;

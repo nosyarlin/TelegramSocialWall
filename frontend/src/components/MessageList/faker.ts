@@ -1,13 +1,13 @@
 import { faker } from "@faker-js/faker";
 import { Message } from "./MessageCard";
-import _ from "lodash";
+import random from "lodash.random";
 
 function createFakeMessage(): Message {
   return {
     id: faker.string.uuid(),
     name: faker.person.fullName(),
     text: faker.lorem.lines({ min: 1, max: 5 }),
-    photoSrc: _.random(0, 1, true) > 0.8 ? faker.image.url() : undefined,
+    photoSrc: random(0, 1, true) > 0.8 ? faker.image.url() : undefined,
   };
 }
 

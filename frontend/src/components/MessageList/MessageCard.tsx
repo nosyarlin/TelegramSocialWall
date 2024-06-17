@@ -8,7 +8,7 @@ import {
   Typography,
   colors,
 } from "@mui/material";
-import _ from "lodash";
+import sample from "lodash.sample";
 import { useState } from "react";
 import ClearIcon from "@mui/icons-material/Clear";
 
@@ -26,7 +26,7 @@ type MessageCardProps = {
 
 export function MessageCard({ message }: MessageCardProps): JSX.Element {
   const [hide, setHide] = useState(false);
-  const avatarColor: keyof typeof colors = _.sample([
+  const avatarColor: keyof typeof colors = sample([
     "deepPurple",
     "deepOrange",
     "amber",
