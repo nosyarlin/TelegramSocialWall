@@ -55,7 +55,7 @@ function App() {
   });
 
   const preloadWellWishes = useCallback(() => {
-    fetch("./WellWishes_Chosen.csv")
+    fetch("./WellWishes.csv")
       .then((data) => data.text())
       .then((csvText): void => {
         const preloadedWishes = Papa.parse<PreloadedMessage>(csvText, {
@@ -98,9 +98,9 @@ function App() {
               fontFamily={"Elephant"}
               marginRight="30px"
             >
-              Joejyn & Jinghui's Digital Wish Board
+              Digital Wish Board
             </Typography>
-            <img src={logo} alt="Logo" width="188px" height="92px" />
+            <img src={logo} alt="Logo" height="92px" />
           </Stack>
           <Typography
             variant="h2"
@@ -109,7 +109,7 @@ function App() {
             fontFamily={"Georgia"}
           >
             Send in your well wishes or images to the Telegram bot:{" "}
-            <b style={{ color: "#CDCDCD" }}> joejyn&jinghui </b>
+            <b style={{ color: "#CDCDCD" }}> telebotname </b>
           </Typography>
           <Typography
             variant="h2"
