@@ -20,8 +20,12 @@ My friend is having a wedding and he wanted to add a social media wall to the we
 
 # Getting Started
 
-1. Create your own telegram bot using the instructions ![here](https://core.telegram.org/bots/tutorial).
+1. Create your own telegram bot using the instructions [here](https://core.telegram.org/bots/tutorial)
 
 2. Start the telegram_bot service (see the README.md file inside the telegram_bot directory)
 
 3. Start the React app (see the README.md file inside the frontend directory)
+
+4. After authenticating with the password, guests will be able to send messages and photos directly to the board
+
+5. By the end of your event, the messages and photos sent to the board will be saved in the `telegram_bot\messages` folder
