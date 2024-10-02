@@ -130,6 +130,22 @@ function App() {
           <MessageList sx={{ width: "25%" }} messages={column4} />
         </Stack>
       </Box>
+      <Box 
+        component= "footer"
+        sx={{
+          position: "fixed",
+          bottom: 0,
+          left: 0, 
+          fontSize: "22px", 
+          width: "100%",
+          textAlign: "center",
+          bgcolor: "#182734",
+          color: "#FFFFFF",
+          padding: "16px"
+        }}>
+        Developed by Rayson & Joejyn :) <br />
+        Find us on LinkedIn: @rayson-lim and @joejyn-wan
+      </Box>
     </>
   );
 }
